@@ -225,24 +225,32 @@
         const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
 
         // Utility function for exponential backoff retry logic
-        async function fetchWithRetry(url, options, retries = 3, delay = 1000) {
+       async function fetchWithRetry(url, options, retries = 5, delay = 1500) { 
             for (let i = 0; i < retries; i++) {
                 try {
                     const response = await fetch(url, options);
-                    if (response.status !== 429) { // Not a Rate Limit error, proceed
+                    if (response.status === 200) { 
                          return response;
                     }
-                    // If it is 429 (Rate Limit), wait and retry
+                    if (response.status !== 429) { 
+                        console.error(`API Error (Status ${response.status}):`, await response.text());
+                        if (response.status === 401 || response.status === 400) {
+                            throw new Error(`API Error: ${response.status}. Check API key or request format.`);
+                        }
+                    }
                 } catch (error) {
                     console.error("Fetch attempt failed:", error);
-                    if (i === retries - 1) throw error; // Re-throw if last attempt
+                    if (i === retries - 1) throw error; 
                 }
-                await new Promise(resolve => setTimeout(resolve, delay * (2 ** i)));
+                // Exponential backoff with random jitter for better recovery
+                await new Promise(resolve => setTimeout(resolve, delay * (2 ** i) + Math.random() * 1000));
             }
+            throw new Error("Failed to connect to Gemini API after multiple retries.");
         }
 
         async function callGeminiAPI(prompt) {
-            const systemPrompt = "You are a witty, professional, and results-driven social media manager specializing in local trade businesses (plumbers, roofers, HVAC, etc.). Your goal is to generate one high-quality, engaging social media caption (2-3 sentences max) and 3 relevant, popular hashtags for a trades business. Do not use markdown formatting (like asterisks or bolding) in the output. The content should be instantly usable on platforms like Instagram or Facebook.";
+            // Revised System Prompt: We force the model to use the "|||" delimiter.
+            const systemPrompt = `You are a professional social media manager specializing in local trade businesses (plumbers, roofers, HVAC). Generate one engaging social media caption (2-3 sentences max) followed by the specific delimiter: ||| followed by 3 relevant, popular hashtags. Do not use markdown formatting (like asterisks or bolding). Example format: The job is done, the customer is happy, and the coffee is hot. Time to rest and reset before the next emergency call. ||| #LocalPlumbing #EmergencyService #TradesLife`;
             
             const payload = {
                 contents: [{ parts: [{ text: prompt }] }],
@@ -275,29 +283,32 @@
             generateButton.disabled = true;
             document.getElementById('button-text').textContent = 'Generating...';
             loadingSpinner.classList.remove('hidden');
-            contentOutput.innerHTML = `<div class="flex items-center justify-center text-trades-blue"><div class="loader mr-3"></div> Generating a fresh post idea for a ${trade}...</div>`;
+            contentOutput.innerHTML = `<div class="flex flex-col items-center justify-center h-full text-trades-blue"><div class="loader mr-3"></div><p class="mt-2">Generating a fresh post idea for a ${trade}...</p></div>`;
 
             const userQuery = `Generate a compelling social media post for a ${trade} that focuses on a recent successful emergency repair job, emphasizing speed and reliability.`;
 
             try {
                 const generatedText = await callGeminiAPI(userQuery);
                 
-                // Simple formatting to split caption and hashtags
-                const parts = generatedText.split('#');
+                // NEW LOGIC: Split using the custom delimiter '|||'
+                const parts = generatedText.split('|||');
                 let caption = parts[0].trim();
-                let hashtags = parts.slice(1).map(h => `#${h.trim()}`).join(' ');
+                let hashtags = parts.length > 1 ? parts[1].trim() : "No hashtags returned. Try again.";
 
-                // Final display
+                // Final display using a clean, separate structure
                 contentOutput.innerHTML = `
-                    <p class="font-semibold text-gray-900 mb-2">Caption:</p>
-                    <p class="text-gray-700 mb-4">${caption}</p>
-                    <p class="font-semibold text-gray-900 mb-1">Hashtags:</p>
-                    <p class="text-trades-blue font-mono text-sm break-all">${hashtags}</p>
+                    <div class="w-full">
+                        <p class="font-semibold text-gray-900 mb-2">Social Caption:</p>
+                        <div class="p-3 bg-white rounded-lg border border-gray-200 mb-4 whitespace-pre-wrap">${caption}</div>
+                        
+                        <p class="font-semibold text-gray-900 mb-1">Hashtags:</p>
+                        <div class="p-3 bg-white rounded-lg border border-gray-200 text-trades-blue font-mono text-sm break-all">${hashtags}</div>
+                    </div>
                 `;
 
             } catch (error) {
                 console.error("Gemini API call failed after retries:", error);
-                contentOutput.innerHTML = '<p class="text-red-600">We hit a snag! Could not connect to the content generator. Please check your network and try again.</p>';
+                contentOutput.innerHTML = '<p class="text-red-600 font-bold">❌ Content Generation Failed.</p><p class="text-red-500 text-sm">Reason: Please ensure your Gemini API Key is valid and that your GitHub deployment is fully live (check the Console for API key errors).</p>';
             } finally {
                 // Reset state
                 generateButton.disabled = false;
