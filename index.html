@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Contractor's Instant Online Kit - Live Demo</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fb;
+        }
+        /* Custom blue accent for the trades */
+        .trades-blue {
+            background-color: #1e40af; /* Darker Blue */
+        }
+        .text-trades-blue {
+            color: #1e40af;
+        }
+        .border-trades-blue {
+            border-color: #1e40af;
+        }
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #1e40af;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen">
+
+    <!-- Header & Hero Section -->
+    <header class="bg-white shadow-md">
+        <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <h1 class="text-2xl font-extrabold text-gray-900">
+                <span class="trades-blue text-white p-1 rounded-md">PRO</span> KIT
+            </h1>
+            <a href="#booking" class="trades-blue text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-800 transition duration-300 shadow-lg">
+                Book Audit
+            </a>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="trades-blue text-white py-16 sm:py-24 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-4xl mx-auto text-center">
+                <p class="text-sm font-semibold mb-2 uppercase opacity-80">Stop Wasting Time on Admin</p>
+                <h2 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight mb-6">
+                    The Contractor's Instant Online Kit
+                </h2>
+                <p class="text-xl sm:text-2xl font-light mb-10 max-w-2xl mx-auto opacity-90">
+                    Get a professional one-page site, automated booking, and ready-to-post content—deployed in just 7 days.
+                </p>
+                <!-- Key CTA -->
+                <a href="#content-generator" class="inline-block bg-yellow-400 text-gray-900 text-xl font-bold px-8 py-3 rounded-xl shadow-2xl hover:bg-yellow-300 transition duration-300 transform hover:scale-105">
+                    See Our Content Quality First
+                </a>
+            </div>
+        </section>
+
+        <!-- Problem/Solution Section -->
+        <section class="py-16 px-4 sm:px-6 lg:px-8 bg-white">
+            <div class="max-w-6xl mx-auto">
+                <h3 class="text-3xl font-bold text-center mb-12 text-gray-900">The Trades Solution</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    
+                    <!-- Problem Card -->
+                    <div class="p-6 bg-red-50 border-l-4 border-red-500 rounded-lg shadow-lg">
+                        <div class="flex items-center mb-3">
+                            <span class="text-3xl mr-3" role="img" aria-label="alert">⚠️</span>
+                            <h4 class="text-xl font-semibold text-gray-900">The Problem</h4>
+                        </div>
+                        <p class="text-gray-600">You're too busy on site to answer calls, handle design, or manage a complicated website. Leads are slipping through your fingers.</p>
+                    </div>
+
+                    <!-- Solution Card -->
+                    <div class="p-6 bg-green-50 border-l-4 border-green-500 rounded-lg shadow-lg">
+                        <div class="flex items-center mb-3">
+                            <span class="text-3xl mr-3" role="img" aria-label="solution">💡</span>
+                            <h4 class="text-xl font-semibold text-gray-900">Our Solution</h4>
+                        </div>
+                        <p class="text-gray-600">A turnkey, automated system: professional site + booking + payment + emails, all configured and tested for you.</p>
+                    </div>
+
+                    <!-- Benefit Card -->
+                    <div class="p-6 bg-blue-50 border-l-4 border-trades-blue rounded-lg shadow-lg">
+                        <div class="flex items-center mb-3">
+                            <span class="text-3xl mr-3" role="img" aria-label="benefit">✅</span>
+                            <h4 class="text-xl font-semibold text-gray-900">The Benefit</h4>
+                        </div>
+                        <p class="text-gray-600">Instant credibility, automated lead capture, and more time focused on delivering quality work.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- LLM Feature: Instant Content Generator -->
+        <section id="content-generator" class="py-16 px-4 sm:px-6 lg:px-8 bg-gray-200">
+            <div class="max-w-4xl mx-auto text-center bg-white p-8 rounded-xl shadow-2xl">
+                <h3 class="text-3xl font-bold text-trades-blue mb-4">✨ Instant Content Preview</h3>
+                <p class="text-lg text-gray-600 mb-8">See the quality of content you'll get. Tell us your trade and generate a quick social media post idea right now!</p>
+
+                <div class="flex flex-col sm:flex-row gap-4 mb-8">
+                    <input type="text" id="trade-input" placeholder="e.g., HVAC Technician, Roofer, Electrician" class="flex-grow p-3 border-2 border-gray-300 rounded-lg focus:border-trades-blue focus:ring focus:ring-trades-blue/50">
+                    <button id="generate-button" onclick="generateContentPreview()" class="trades-blue text-white px-6 py-3 rounded-lg font-semibold text-lg hover:bg-blue-800 transition duration-300 shadow-xl flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed">
+                        <span id="button-text">Generate Post Idea ✨</span>
+                        <div id="loading-spinner" class="loader ml-3 hidden"></div>
+                    </button>
+                </div>
+                
+                <!-- Output Area -->
+                <div id="content-output" class="mt-8 p-6 text-left bg-blue-50 border-2 border-trades-blue rounded-xl min-h-[150px] flex items-center justify-center">
+                    <p class="text-gray-500 italic">Your professional social media caption and hashtags will appear here.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Package Comparison Section -->
+        <section class="py-16 px-4 sm:px-6 lg:px-8 bg-gray-100">
+            <div class="max-w-6xl mx-auto text-center">
+                <h3 class="text-3xl font-bold text-gray-900 mb-4">Choose Your Kit</h3>
+                <p class="text-xl text-gray-600 mb-12">Low-cost setup, high-impact results for the trades.</p>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+                    <!-- Starter Kit Card -->
+                    <div class="bg-white p-8 rounded-xl shadow-2xl border-t-8 border-yellow-400">
+                        <h4 class="text-3xl font-extrabold text-gray-900 mb-2">🛠️ STARTER KIT</h4>
+                        <p class="text-5xl font-extrabold text-trades-blue mb-6">$239</p>
+                        <p class="text-lg text-gray-600 mb-6">Perfect for the busy solopreneur needing instant credibility and automation.</p>
+
+                        <ul class="text-left space-y-3 mb-8">
+                            <li class="flex items-center text-gray-700 font-medium">
+                                <svg class="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 14.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                                One-Page Site Scaffold (Demo Ready)
+                            </li>
+                            <li class="flex items-center text-gray-700 font-medium">
+                                <svg class="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 14.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                                Automated Booking (Calendly & Intake)
+                            </li>
+                            <li class="flex items-center text-gray-700 font-medium">
+                                <svg class="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 14.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                                6 Branded Canva Posts (Ready in 7 days)
+                            </li>
+                            <li class="flex items-center text-gray-700 font-medium">
+                                <svg class="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 14.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                                Stripe Payment Integration
+                            </li>
+                        </ul>
+                        <a href="#booking" class="block w-full text-center trades-blue text-white px-6 py-3 rounded-lg font-semibold text-lg hover:bg-blue-800 transition duration-300 shadow-xl">
+                            Select Starter Kit
+                        </a>
+                    </div>
+
+                    <!-- Standard Kit Card -->
+                    <div class="bg-white p-8 rounded-xl shadow-2xl border-t-8 border-trades-blue">
+                        <h4 class="text-3xl font-extrabold text-gray-900 mb-2">🚀 STANDARD GROWTH KIT</h4>
+                        <p class="text-5xl font-extrabold text-trades-blue mb-6">$629</p>
+                        <p class="text-lg text-gray-600 mb-6">For the established crew ready for predictable lead flow and content consistency.</p>
+
+                        <ul class="text-left space-y-3 mb-8">
+                            <li class="flex items-center text-gray-700 font-medium">
+                                <svg class="w-5 h-5 text-trades-blue mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 14.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                                Everything in the Starter Kit
+                            </li>
+                            <li class="flex items-center text-gray-700 font-medium">
+                                <svg class="w-5 h-5 text-trades-blue mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 14.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                                20+ Content Pack & 30-Day Calendar
+                            </li>
+                            <li class="flex items-center text-gray-700 font-medium">
+                                <svg class="w-5 h-5 text-trades-blue mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 14.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                                2-Week Organic Growth Plan
+                            </li>
+                            <li class="flex items-center text-gray-700 font-medium">
+                                <svg class="w-5 h-5 text-trades-blue mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 14.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                                30-Minute Staff Training Call
+                            </li>
+                        </ul>
+                        <a href="#booking" class="block w-full text-center trades-blue text-white px-6 py-3 rounded-lg font-semibold text-lg hover:bg-blue-800 transition duration-300 shadow-xl">
+                            Select Growth Kit
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Booking Section (Placeholder for Calendly) -->
+        <section id="booking" class="py-16 px-4 sm:px-6 lg:px-8 bg-white">
+            <div class="max-w-4xl mx-auto text-center">
+                <h3 class="text-3xl font-bold text-gray-900 mb-4">Book Your Free 15-Minute Audit</h3>
+                <p class="text-xl text-gray-600 mb-8">Let's discuss your current lead flow and see how quickly we can implement your new system.</p>
+                
+                <!-- NOTE TO USER: REPLACE THIS BLOCK WITH YOUR ACTUAL CALENDLY EMBED CODE -->
+                <div class="border-4 border-dashed border-trades-blue p-10 rounded-xl text-center text-gray-600 bg-blue-50">
+                    <p class="font-bold text-xl mb-2">CALENDLY EMBED GOES HERE</p>
+                    <p>On Day 2 (tomorrow), you will replace this box with the actual Calendly iframe or link for the audit.</p>
+                    <a href="#" class="text-trades-blue underline mt-2 inline-block font-semibold">\[Click here to imagine your Calendly booking screen\]</a>
+                    <input type="hidden" id="calendly-link" value="INSERT_YOUR_CALENDLY_LINK_HERE">
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="trades-blue text-white py-6 mt-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p>&copy; 2025 PRO KIT Marketing. Built for Local Trades.</p>
+        </div>
+    </footer>
+
+    <script>
+        const tradeInput = document.getElementById('trade-input');
+        const contentOutput = document.getElementById('content-output');
+        const generateButton = document.getElementById('generate-button');
+        const loadingSpinner = document.getElementById('loading-spinner');
+        const apiKey = ""; 
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+
+        // Utility function for exponential backoff retry logic
+        async function fetchWithRetry(url, options, retries = 3, delay = 1000) {
+            for (let i = 0; i < retries; i++) {
+                try {
+                    const response = await fetch(url, options);
+                    if (response.status !== 429) { // Not a Rate Limit error, proceed
+                         return response;
+                    }
+                    // If it is 429 (Rate Limit), wait and retry
+                } catch (error) {
+                    console.error("Fetch attempt failed:", error);
+                    if (i === retries - 1) throw error; // Re-throw if last attempt
+                }
+                await new Promise(resolve => setTimeout(resolve, delay * (2 ** i)));
+            }
+        }
+
+        async function callGeminiAPI(prompt) {
+            const systemPrompt = "You are a witty, professional, and results-driven social media manager specializing in local trade businesses (plumbers, roofers, HVAC, etc.). Your goal is to generate one high-quality, engaging social media caption (2-3 sentences max) and 3 relevant, popular hashtags for a trades business. Do not use markdown formatting (like asterisks or bolding) in the output. The content should be instantly usable on platforms like Instagram or Facebook.";
+            
+            const payload = {
+                contents: [{ parts: [{ text: prompt }] }],
+                systemInstruction: {
+                    parts: [{ text: systemPrompt }]
+                },
+            };
+
+            const options = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            };
+
+            const response = await fetchWithRetry(apiUrl, options);
+            const result = await response.json();
+            
+            const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
+            return text || "Error: Could not generate content. Please try a different prompt.";
+        }
+
+        async function generateContentPreview() {
+            const trade = tradeInput.value.trim();
+            if (!trade) {
+                contentOutput.innerHTML = '<p class="text-red-600">Please enter your trade (e.g., Plumber) to generate content.</p>';
+                return;
+            }
+
+            // Set loading state
+            generateButton.disabled = true;
+            document.getElementById('button-text').textContent = 'Generating...';
+            loadingSpinner.classList.remove('hidden');
+            contentOutput.innerHTML = `<div class="flex items-center justify-center text-trades-blue"><div class="loader mr-3"></div> Generating a fresh post idea for a ${trade}...</div>`;
+
+            const userQuery = `Generate a compelling social media post for a ${trade} that focuses on a recent successful emergency repair job, emphasizing speed and reliability.`;
+
+            try {
+                const generatedText = await callGeminiAPI(userQuery);
+                
+                // Simple formatting to split caption and hashtags
+                const parts = generatedText.split('#');
+                let caption = parts[0].trim();
+                let hashtags = parts.slice(1).map(h => `#${h.trim()}`).join(' ');
+
+                // Final display
+                contentOutput.innerHTML = `
+                    <p class="font-semibold text-gray-900 mb-2">Caption:</p>
+                    <p class="text-gray-700 mb-4">${caption}</p>
+                    <p class="font-semibold text-gray-900 mb-1">Hashtags:</p>
+                    <p class="text-trades-blue font-mono text-sm break-all">${hashtags}</p>
+                `;
+
+            } catch (error) {
+                console.error("Gemini API call failed after retries:", error);
+                contentOutput.innerHTML = '<p class="text-red-600">We hit a snag! Could not connect to the content generator. Please check your network and try again.</p>';
+            } finally {
+                // Reset state
+                generateButton.disabled = false;
+                document.getElementById('button-text').textContent = 'Generate Post Idea ✨';
+                loadingSpinner.classList.add('hidden');
+            }
+        }
+    </script>
+
+</body>
+</html>
